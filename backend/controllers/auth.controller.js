@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { sendWelcomeEmail } from '../emails/emailHandlers.js';
 
-// Sign In
+// SIGN UP
 export const signup = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
@@ -83,8 +83,61 @@ export const signup = async (req, res) => {
   }
 };
 
-// Login
-export const login = (req, res) => {};
+// LOGIN
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-// Logout
-export const logout = (req, res) => {};
+    // Check empty email & password
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    if (!password) {
+      return res.status(400).json({ message: 'Password is required' });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'User does not exist' });
+    }
+
+    // Check password
+    const isMatch = bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect email or password' });
+    }
+
+    // If everything is OK. Create Token
+    const token = jwt.sign(
+      {
+        userId: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '3d',
+      },
+    );
+
+    // Set cookie
+    res.cookie('jwt-linkedin', token, {
+      httpOnly: true,
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    res.json({ message: 'User logged in successfully' });
+  } catch (error) {
+    console.log(`🚀error (login):`, error);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+// LOGOUT
+export const logout = (req, res) => {
+  // Set cookie
+  res.cookie('jwt-linkedin', '');
+  res.status(200).json({ message: 'Logged out successfully' });
+};

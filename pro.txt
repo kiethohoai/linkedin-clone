@@ -3,3 +3,4 @@
 
 2 models, controllers, routes & database setup
 3 signup routes & mailtrap
+4 login logout api

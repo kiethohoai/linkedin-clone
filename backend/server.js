@@ -15,4 +15,5 @@ app.use('/api/v1/auth', authRoutes);
 app.listen(PORT, async () => {
   console.log(`🚀SERVER RUNNING ON PORT: ${PORT}`);
   await connectDB();
+  console.log(`ENV: ${process.env.NODE_ENV}`);
 });

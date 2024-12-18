@@ -1,0 +1,2 @@
+1 setup backend
++ express mongoose dotenv mailtrap jsonwebtoken cookie-parser bcryptjs cloudinary

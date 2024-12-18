@@ -141,3 +141,13 @@ export const logout = (req, res) => {
   res.cookie('jwt-linkedin', '');
   res.status(200).json({ message: 'Logged out successfully' });
 };
+
+// GET CURRENT USER API
+export const getCurrentUser = async (req, res) => {
+  try {
+    res.json(req.user);
+  } catch (error) {
+    console.log(`🚀error (getCurrentUser):`, error);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};

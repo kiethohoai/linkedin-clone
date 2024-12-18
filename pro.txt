@@ -1,6 +1,6 @@
 1 setup backend
 + express mongoose dotenv mailtrap jsonwebtoken cookie-parser bcryptjs cloudinary
-
 2 models, controllers, routes & database setup
 3 signup routes & mailtrap
 4 login logout api
+5 /me (Get Current User Information)

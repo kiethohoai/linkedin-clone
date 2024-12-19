@@ -5,3 +5,4 @@
 4 login logout api
 5 /me (Get Current User Information)
 6 GET SUGGESTED CONNECTIONS API (user routes)
+7 GET PUBLIC PROFILE API (user routes)

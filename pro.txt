@@ -4,3 +4,4 @@
 3 signup routes & mailtrap
 4 login logout api
 5 /me (Get Current User Information)
+6 GET SUGGESTED CONNECTIONS API (user routes)

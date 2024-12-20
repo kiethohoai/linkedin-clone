@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     content: { type: toString },
-    Image: { type: toString },
+    image: { type: toString },
     like: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     comments: [
       {

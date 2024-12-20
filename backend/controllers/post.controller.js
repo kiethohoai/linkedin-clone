@@ -47,3 +47,37 @@ export const createPost = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const deletePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.user._id;
+
+    // Find the post
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post Not Found' });
+    }
+
+    // Check if user is author of this post
+    if (post.author.toString() !== userId.toString()) {
+      return res.status(403).json({
+        message: 'Failed to delete post! You are not author of this post',
+      });
+    }
+
+    // Delete image from cloudinary (input is id of image in cloudinary)
+    if (post.image) {
+      await cloudinary.uploader.destroy(
+        post.image.split('/').pop().split('.')[0],
+      );
+    }
+
+    // Delete post
+    await Post.findByIdAndDelete(postId);
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.log(`🚀CHECK > error (deletePost):`, error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};

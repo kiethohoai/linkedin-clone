@@ -1,4 +1,4 @@
-import User from '../models/user.model';
+import User from '../models/user.model.js';
 
 /* GET SUGGESTED CONNECTIONS */
 export const getSuggestedConnections = async () => {
@@ -35,6 +35,51 @@ export const getPublicProfile = async () => {
     }
 
     res.status(200).json(user);
+  } catch (error) {
+    console.log(`🚀CHECK > error:`, error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+/* UPDATE PROFILE */
+export const updateProfile = async (req, res) => {
+  try {
+    // Prepare data
+    const allowedFields = [
+      'name',
+      'username',
+      'headline',
+      'about',
+      'location',
+      'profilePicture',
+      'bannerImg',
+      'skills',
+      'experience',
+      'education',
+    ];
+
+    const updateData = {};
+
+    // Check req.body contain any allowed fields, add to updateData
+    for (const field of allowedFields) {
+      if (req.body[field]) {
+        updateData[field] = req.body[field];
+      }
+    }
+
+    // Check profilePicture, bannerImg => Upload to cloundinary
+
+    // Update user
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: updateData },
+      {
+        new: true,
+      },
+    ).select('-password');
+
+    // Return user back to client
+    res.json(user);
   } catch (error) {
     console.log(`🚀CHECK > error:`, error);
     res.status(500).json({ message: 'Internal Server Error' });

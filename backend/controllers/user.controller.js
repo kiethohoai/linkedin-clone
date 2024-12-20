@@ -1,3 +1,4 @@
+import cloudinary from '../lib/cloudinary.js';
 import User from '../models/user.model.js';
 
 /* GET SUGGESTED CONNECTIONS */
@@ -68,6 +69,15 @@ export const updateProfile = async (req, res) => {
     }
 
     // Check profilePicture, bannerImg => Upload to cloundinary
+    if (req.body.profilePicture) {
+      const result = await cloudinary.uploader.upload(req.body.profilePicture);
+      updateData.profilePicture = result.secure_url;
+    }
+
+    if (req.body.bannerImg) {
+      const result = await cloudinary.uploader.upload(req.body.bannerImg);
+      updateData.bannerImg = result.secure_url;
+    }
 
     // Update user
     const user = await User.findByIdAndUpdate(

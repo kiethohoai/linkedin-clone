@@ -81,3 +81,17 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const getPostById = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findById(postId)
+      .populate('author', 'name username profilePicture headline')
+      .populate('comments.user', 'name profilePicture username headline');
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(`🚀CHECK > error (getPostById):`, error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
